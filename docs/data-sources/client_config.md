@@ -17,13 +17,20 @@ terraform {
     }
   }
 }
+
 provider "azapi" {
 }
-data "azapi_client_config" "current" {
-}
+
+data "azapi_client_config" "current" {}
+
 output "subscription_id" {
   value = data.azapi_client_config.current.subscription_id
 }
+
+output "subscription_resource_id" {
+  value = data.azapi_client_config.current.subscription_resource_id
+}
+
 output "tenant_id" {
   value = data.azapi_client_config.current.tenant_id
 }
@@ -38,9 +45,10 @@ output "tenant_id" {
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
-- `subscription_id` (String)
-- `tenant_id` (String)
+- `id` (String) The internal ID of the resource. Required for acceptance tests.
+- `subscription_id` (String) The subscription ID of the authentication context. E.g. `00000000-0000-0000-0000-000000000000`
+- `subscription_resource_id` (String) The subscription resource ID of the authentication context. Useful as the `parent_id` value. E.g. `/subscriptions/00000000-0000-0000-0000-000000000000`
+- `tenant_id` (String) The tenant ID of the authentication context. E.g. `00000000-0000-0000-0000-000000000000`
 
 <a id="nestedblock--timeouts"></a>
 ### Nested Schema for `timeouts`

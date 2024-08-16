@@ -13,10 +13,11 @@ import (
 )
 
 type ClientConfigDataSourceModel struct {
-	ID             types.String   `tfsdk:"id"`
-	TenantID       types.String   `tfsdk:"tenant_id"`
-	SubscriptionID types.String   `tfsdk:"subscription_id"`
-	Timeouts       timeouts.Value `tfsdk:"timeouts"`
+	ID                     types.String   `tfsdk:"id"`
+	TenantID               types.String   `tfsdk:"tenant_id"`
+	SubscriptionID         types.String   `tfsdk:"subscription_id"`
+	SubscriptionResourceID types.String   `tfsdk:"subscription_resource_id"`
+	Timeouts               timeouts.Value `tfsdk:"timeouts"`
 }
 
 type ClientConfigDataSource struct {
@@ -40,15 +41,23 @@ func (r *ClientConfigDataSource) Schema(ctx context.Context, request datasource.
 	response.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "The internal ID of the resource. Required for acceptance tests.",
 			},
 
 			"tenant_id": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "The tenant ID of the authentication context. E.g. `00000000-0000-0000-0000-000000000000`",
 			},
 
 			"subscription_id": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "The subscription ID of the authentication context. E.g. `00000000-0000-0000-0000-000000000000`",
+			},
+
+			"subscription_resource_id": schema.StringAttribute{
+				Computed:            true,
+				MarkdownDescription: "The subscription resource ID of the authentication context. Useful as the `parent_id` value. E.g. `/subscriptions/00000000-0000-0000-0000-000000000000`",
 			},
 		},
 
@@ -80,6 +89,7 @@ func (r *ClientConfigDataSource) Read(ctx context.Context, request datasource.Re
 
 	model.ID = types.StringValue(fmt.Sprintf("clientConfigs/subscriptionId=%s;tenantId=%s", subscriptionId, tenantId))
 	model.SubscriptionID = types.StringValue(subscriptionId)
+	model.SubscriptionResourceID = types.StringValue(fmt.Sprintf("/subscriptions/%s", subscriptionId))
 	model.TenantID = types.StringValue(tenantId)
 	response.Diagnostics.Append(response.State.Set(ctx, &model)...)
 }
