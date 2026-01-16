@@ -230,8 +230,9 @@ func identifierOfArrayItemByKey(input interface{}, key string) string {
 	if !ok {
 		return ""
 	}
+	// If key is empty, fall back to "name" for backward compatibility
 	if key == "" {
-		return ""
+		key = "name"
 	}
 	value := inputMap[key]
 	if value == nil {
