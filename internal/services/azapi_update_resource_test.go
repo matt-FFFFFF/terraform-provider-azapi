@@ -357,7 +357,7 @@ resource "azapi_resource" "serverfarm" {
       zoneRedundant  = false
     }
     sku = {
-      name = "S1"
+      name = "P1v3"
     }
   }
 }
@@ -1080,6 +1080,10 @@ resource "azapi_resource" "apiManagementInstance" {
       publisherEmail     = "publisherEmail@contoso.com"
       publisherName      = "publisherName"
     }
+  }
+
+  timeouts {
+    create = "60m"
   }
 }
 
